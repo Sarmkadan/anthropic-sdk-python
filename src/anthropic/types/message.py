@@ -71,9 +71,6 @@ class Message(BaseModel):
     - `"max_tokens"`: we exceeded the requested `max_tokens` or the model's maximum
     - `"stop_sequence"`: one of your provided custom `stop_sequences` was generated
 
-    Note that these values are different than those in `/v1/complete`, where
-    `end_turn` and `stop_sequence` were not differentiated.
-
     In non-streaming mode this value is always non-null. In streaming mode, it is
     null in the `message_start` event and non-null otherwise.
     """
