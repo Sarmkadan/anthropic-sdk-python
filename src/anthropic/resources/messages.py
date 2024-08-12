@@ -162,8 +162,8 @@ class Messages(SyncAPIResource):
               We currently support the `base64` source type for images, and the `image/jpeg`,
               `image/png`, `image/gif`, and `image/webp` media types.
 
-              See [examples](https://docs.anthropic.com/en/api/messages-examples) for more
-              input examples.
+              See [examples](https://docs.anthropic.com/en/api/messages-examples#vision) for
+              more input examples.
 
               Note that if you want to include a
               [system prompt](https://docs.anthropic.com/en/docs/system-prompts), you can use
@@ -425,8 +425,8 @@ class Messages(SyncAPIResource):
               We currently support the `base64` source type for images, and the `image/jpeg`,
               `image/png`, `image/gif`, and `image/webp` media types.
 
-              See [examples](https://docs.anthropic.com/en/api/messages-examples) for more
-              input examples.
+              See [examples](https://docs.anthropic.com/en/api/messages-examples#vision) for
+              more input examples.
 
               Note that if you want to include a
               [system prompt](https://docs.anthropic.com/en/docs/system-prompts), you can use
@@ -688,8 +688,8 @@ class Messages(SyncAPIResource):
               We currently support the `base64` source type for images, and the `image/jpeg`,
               `image/png`, `image/gif`, and `image/webp` media types.
 
-              See [examples](https://docs.anthropic.com/en/api/messages-examples) for more
-              input examples.
+              See [examples](https://docs.anthropic.com/en/api/messages-examples#vision) for
+              more input examples.
 
               Note that if you want to include a
               [system prompt](https://docs.anthropic.com/en/docs/system-prompts), you can use
@@ -1068,8 +1068,8 @@ class AsyncMessages(AsyncAPIResource):
               We currently support the `base64` source type for images, and the `image/jpeg`,
               `image/png`, `image/gif`, and `image/webp` media types.
 
-              See [examples](https://docs.anthropic.com/en/api/messages-examples) for more
-              input examples.
+              See [examples](https://docs.anthropic.com/en/api/messages-examples#vision) for
+              more input examples.
 
               Note that if you want to include a
               [system prompt](https://docs.anthropic.com/en/docs/system-prompts), you can use
@@ -1331,8 +1331,8 @@ class AsyncMessages(AsyncAPIResource):
               We currently support the `base64` source type for images, and the `image/jpeg`,
               `image/png`, `image/gif`, and `image/webp` media types.
 
-              See [examples](https://docs.anthropic.com/en/api/messages-examples) for more
-              input examples.
+              See [examples](https://docs.anthropic.com/en/api/messages-examples#vision) for
+              more input examples.
 
               Note that if you want to include a
               [system prompt](https://docs.anthropic.com/en/docs/system-prompts), you can use
@@ -1594,8 +1594,8 @@ class AsyncMessages(AsyncAPIResource):
               We currently support the `base64` source type for images, and the `image/jpeg`,
               `image/png`, `image/gif`, and `image/webp` media types.
 
-              See [examples](https://docs.anthropic.com/en/api/messages-examples) for more
-              input examples.
+              See [examples](https://docs.anthropic.com/en/api/messages-examples#vision) for
+              more input examples.
 
               Note that if you want to include a
               [system prompt](https://docs.anthropic.com/en/docs/system-prompts), you can use
