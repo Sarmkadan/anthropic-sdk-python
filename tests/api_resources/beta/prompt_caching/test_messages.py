@@ -115,6 +115,7 @@ class TestMessages:
             ],
             top_k=5,
             top_p=0.7,
+            betas=["string", "string", "string"],
         )
         assert_matches_type(PromptCachingBetaMessage, message, path=["response"])
 
@@ -255,6 +256,7 @@ class TestMessages:
             ],
             top_k=5,
             top_p=0.7,
+            betas=["string", "string", "string"],
         )
         message_stream.response.close()
 
@@ -399,6 +401,7 @@ class TestAsyncMessages:
             ],
             top_k=5,
             top_p=0.7,
+            betas=["string", "string", "string"],
         )
         assert_matches_type(PromptCachingBetaMessage, message, path=["response"])
 
@@ -539,6 +542,7 @@ class TestAsyncMessages:
             ],
             top_k=5,
             top_p=0.7,
+            betas=["string", "string", "string"],
         )
         await message_stream.response.aclose()
 

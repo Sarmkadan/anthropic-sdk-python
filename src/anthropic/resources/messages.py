@@ -78,8 +78,6 @@ class Messages(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> Message:
         """
-        Create a Message.
-
         Send a structured list of input messages with text and/or image content, and the
         model will generate the next message in the conversation.
 
@@ -341,8 +339,6 @@ class Messages(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> Stream[RawMessageStreamEvent]:
         """
-        Create a Message.
-
         Send a structured list of input messages with text and/or image content, and the
         model will generate the next message in the conversation.
 
@@ -604,8 +600,6 @@ class Messages(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> Message | Stream[RawMessageStreamEvent]:
         """
-        Create a Message.
-
         Send a structured list of input messages with text and/or image content, and the
         model will generate the next message in the conversation.
 
@@ -940,8 +934,6 @@ class AsyncMessages(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> Message:
         """
-        Create a Message.
-
         Send a structured list of input messages with text and/or image content, and the
         model will generate the next message in the conversation.
 
@@ -1203,8 +1195,6 @@ class AsyncMessages(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> AsyncStream[RawMessageStreamEvent]:
         """
-        Create a Message.
-
         Send a structured list of input messages with text and/or image content, and the
         model will generate the next message in the conversation.
 
@@ -1466,8 +1456,6 @@ class AsyncMessages(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> Message | AsyncStream[RawMessageStreamEvent]:
         """
-        Create a Message.
-
         Send a structured list of input messages with text and/or image content, and the
         model will generate the next message in the conversation.
 
