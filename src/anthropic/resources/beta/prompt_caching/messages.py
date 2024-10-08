@@ -14,6 +14,7 @@ from ...._utils import (
     is_given,
     required_args,
     maybe_transform,
+    strip_not_given,
     async_maybe_transform,
 )
 from ...._compat import cached_property
@@ -27,6 +28,7 @@ from ....types.model_param import ModelParam
 from ....types.metadata_param import MetadataParam
 from ....types.tool_choice_param import ToolChoiceParam
 from ....types.beta.prompt_caching import message_create_params
+from ....types.anthropic_beta_param import AnthropicBetaParam
 from ....types.beta.prompt_caching.prompt_caching_beta_message import PromptCachingBetaMessage
 from ....types.beta.prompt_caching.prompt_caching_beta_tool_param import PromptCachingBetaToolParam
 from ....types.beta.prompt_caching.prompt_caching_beta_message_param import PromptCachingBetaMessageParam
@@ -74,6 +76,7 @@ class Messages(SyncAPIResource):
         tools: Iterable[PromptCachingBetaToolParam] | NotGiven = NOT_GIVEN,
         top_k: int | NotGiven = NOT_GIVEN,
         top_p: float | NotGiven = NOT_GIVEN,
+        betas: List[AnthropicBetaParam] | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -82,8 +85,6 @@ class Messages(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> PromptCachingBetaMessage:
         """
-        Create a Message.
-
         Send a structured list of input messages with text and/or image content, and the
         model will generate the next message in the conversation.
 
@@ -310,6 +311,8 @@ class Messages(SyncAPIResource):
 
               Recommended for advanced use cases only. You usually only need to use
               `temperature`.
+
+          betas: Optional header to specify the beta version(s) you want to use.
 
           extra_headers: Send extra headers
 
@@ -337,6 +340,7 @@ class Messages(SyncAPIResource):
         tools: Iterable[PromptCachingBetaToolParam] | NotGiven = NOT_GIVEN,
         top_k: int | NotGiven = NOT_GIVEN,
         top_p: float | NotGiven = NOT_GIVEN,
+        betas: List[AnthropicBetaParam] | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -345,8 +349,6 @@ class Messages(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> Stream[RawPromptCachingBetaMessageStreamEvent]:
         """
-        Create a Message.
-
         Send a structured list of input messages with text and/or image content, and the
         model will generate the next message in the conversation.
 
@@ -573,6 +575,8 @@ class Messages(SyncAPIResource):
 
               Recommended for advanced use cases only. You usually only need to use
               `temperature`.
+
+          betas: Optional header to specify the beta version(s) you want to use.
 
           extra_headers: Send extra headers
 
@@ -600,6 +604,7 @@ class Messages(SyncAPIResource):
         tools: Iterable[PromptCachingBetaToolParam] | NotGiven = NOT_GIVEN,
         top_k: int | NotGiven = NOT_GIVEN,
         top_p: float | NotGiven = NOT_GIVEN,
+        betas: List[AnthropicBetaParam] | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -608,8 +613,6 @@ class Messages(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> PromptCachingBetaMessage | Stream[RawPromptCachingBetaMessageStreamEvent]:
         """
-        Create a Message.
-
         Send a structured list of input messages with text and/or image content, and the
         model will generate the next message in the conversation.
 
@@ -837,6 +840,8 @@ class Messages(SyncAPIResource):
               Recommended for advanced use cases only. You usually only need to use
               `temperature`.
 
+          betas: Optional header to specify the beta version(s) you want to use.
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -863,6 +868,7 @@ class Messages(SyncAPIResource):
         tools: Iterable[PromptCachingBetaToolParam] | NotGiven = NOT_GIVEN,
         top_k: int | NotGiven = NOT_GIVEN,
         top_p: float | NotGiven = NOT_GIVEN,
+        betas: List[AnthropicBetaParam] | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -873,6 +879,10 @@ class Messages(SyncAPIResource):
         if not is_given(timeout) and self._client.timeout == DEFAULT_TIMEOUT:
             timeout = 600
         extra_headers = {"anthropic-beta": "prompt-caching-2024-07-31", **(extra_headers or {})}
+        extra_headers = {
+            **strip_not_given({"anthropic-beta": ",".join(str(e) for e in betas) if is_given(betas) else NOT_GIVEN}),
+            **(extra_headers or {}),
+        }
         return self._post(
             "/v1/messages?beta=prompt_caching",
             body=maybe_transform(
@@ -996,6 +1006,7 @@ class AsyncMessages(AsyncAPIResource):
         tools: Iterable[PromptCachingBetaToolParam] | NotGiven = NOT_GIVEN,
         top_k: int | NotGiven = NOT_GIVEN,
         top_p: float | NotGiven = NOT_GIVEN,
+        betas: List[AnthropicBetaParam] | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -1004,8 +1015,6 @@ class AsyncMessages(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> PromptCachingBetaMessage:
         """
-        Create a Message.
-
         Send a structured list of input messages with text and/or image content, and the
         model will generate the next message in the conversation.
 
@@ -1232,6 +1241,8 @@ class AsyncMessages(AsyncAPIResource):
 
               Recommended for advanced use cases only. You usually only need to use
               `temperature`.
+
+          betas: Optional header to specify the beta version(s) you want to use.
 
           extra_headers: Send extra headers
 
@@ -1259,6 +1270,7 @@ class AsyncMessages(AsyncAPIResource):
         tools: Iterable[PromptCachingBetaToolParam] | NotGiven = NOT_GIVEN,
         top_k: int | NotGiven = NOT_GIVEN,
         top_p: float | NotGiven = NOT_GIVEN,
+        betas: List[AnthropicBetaParam] | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -1267,8 +1279,6 @@ class AsyncMessages(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> AsyncStream[RawPromptCachingBetaMessageStreamEvent]:
         """
-        Create a Message.
-
         Send a structured list of input messages with text and/or image content, and the
         model will generate the next message in the conversation.
 
@@ -1495,6 +1505,8 @@ class AsyncMessages(AsyncAPIResource):
 
               Recommended for advanced use cases only. You usually only need to use
               `temperature`.
+
+          betas: Optional header to specify the beta version(s) you want to use.
 
           extra_headers: Send extra headers
 
@@ -1522,6 +1534,7 @@ class AsyncMessages(AsyncAPIResource):
         tools: Iterable[PromptCachingBetaToolParam] | NotGiven = NOT_GIVEN,
         top_k: int | NotGiven = NOT_GIVEN,
         top_p: float | NotGiven = NOT_GIVEN,
+        betas: List[AnthropicBetaParam] | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -1530,8 +1543,6 @@ class AsyncMessages(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> PromptCachingBetaMessage | AsyncStream[RawPromptCachingBetaMessageStreamEvent]:
         """
-        Create a Message.
-
         Send a structured list of input messages with text and/or image content, and the
         model will generate the next message in the conversation.
 
@@ -1759,6 +1770,8 @@ class AsyncMessages(AsyncAPIResource):
               Recommended for advanced use cases only. You usually only need to use
               `temperature`.
 
+          betas: Optional header to specify the beta version(s) you want to use.
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -1785,6 +1798,7 @@ class AsyncMessages(AsyncAPIResource):
         tools: Iterable[PromptCachingBetaToolParam] | NotGiven = NOT_GIVEN,
         top_k: int | NotGiven = NOT_GIVEN,
         top_p: float | NotGiven = NOT_GIVEN,
+        betas: List[AnthropicBetaParam] | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -1795,6 +1809,10 @@ class AsyncMessages(AsyncAPIResource):
         if not is_given(timeout) and self._client.timeout == DEFAULT_TIMEOUT:
             timeout = 600
         extra_headers = {"anthropic-beta": "prompt-caching-2024-07-31", **(extra_headers or {})}
+        extra_headers = {
+            **strip_not_given({"anthropic-beta": ",".join(str(e) for e in betas) if is_given(betas) else NOT_GIVEN}),
+            **(extra_headers or {}),
+        }
         return await self._post(
             "/v1/messages?beta=prompt_caching",
             body=await async_maybe_transform(
