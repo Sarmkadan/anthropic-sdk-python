@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import os
 import inspect
-from typing import Any, TypeVar, cast
+from typing import Any, Set, TypeVar, cast
 from typing_extensions import Iterator, AsyncIterator
 
 import httpx
@@ -10,9 +10,11 @@ import pytest
 from respx import MockRouter
 
 from anthropic import Stream, Anthropic, AsyncStream, AsyncAnthropic
+from anthropic._compat import PYDANTIC_V2
 from anthropic.lib.streaming import MessageStreamEvent
 from anthropic.types.message import Message
 from anthropic.resources.messages import DEPRECATED_MODELS
+from anthropic.lib.streaming._beta_messages import TRACKS_TOOL_INPUT
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 api_key = "my-anthropic-api-key"
@@ -264,4 +266,41 @@ def test_beta_stream_method_definition_in_sync(sync: bool) -> None:
         raise AssertionError(
             f"{len(errors)} errors encountered with the {'sync' if sync else 'async'} client `messages.stream()` method:\n\n"
             + "\n\n".join(errors)
+        )
+
+
+# go through all the ContentBlock types to make sure the type alias is up to date
+# with any type that has an input property of type object
+def test_tracks_tool_input_type_alias_is_up_to_date() -> None:
+    # only run this on Pydantic v2
+    if not PYDANTIC_V2:
+        pytest.skip("This test is only applicable for Pydantic v2")
+    from typing import get_args
+
+    from pydantic import BaseModel
+
+    from anthropic.types.beta.beta_content_block import BetaContentBlock
+
+    # Get the content block union type
+    content_block_union = get_args(BetaContentBlock)[0]
+
+    # Get all types from BetaContentBlock union
+    content_block_types = get_args(content_block_union)
+
+    # Types that should have an input property
+    types_with_input: Set[Any] = set()
+
+    # Check each type to see if it has an input property in its model_fields
+    for block_type in content_block_types:
+        if issubclass(block_type, BaseModel) and "input" in block_type.model_fields:
+            types_with_input.add(block_type)
+
+    # Get the types included in TRACKS_TOOL_INPUT
+    tracked_types = set(get_args(TRACKS_TOOL_INPUT))
+
+    # Make sure all types with input are tracked
+    for block_type in types_with_input:
+        assert block_type in tracked_types, (
+            f"ContentBlock type {block_type.__name__} has an input property, "
+            f"but is not included in TRACKS_TOOL_INPUT. You probably need to update the TRACKS_TOOL_INPUT type alias."
         )
