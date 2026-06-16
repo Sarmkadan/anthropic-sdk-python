@@ -130,6 +130,11 @@ __all__ = [
 
 
 class Anthropic(SyncAPIClient):
+    """
+    Synchronous Anthropic API client.
+
+    This client provides a synchronous interface to interact with the Anthropic API.
+    """
     # client options
     api_key: str | None
     auth_token: str | None
@@ -532,6 +537,11 @@ class Anthropic(SyncAPIClient):
 
 
 class AsyncAnthropic(AsyncAPIClient):
+    """
+    Asynchronous Anthropic API client.
+
+    This client provides an asynchronous interface to interact with the Anthropic API.
+    """
     # client options
     api_key: str | None
     auth_token: str | None
