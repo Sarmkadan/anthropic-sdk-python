@@ -1,0 +1,95 @@
+version: '3.9'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: anthropic-sdk
+    volumes:
+      - .:/app
+      - uv-cache:/root/.cache/uv
+    environment:
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      - PYTHONPATH=/app/src
+    working_dir: /app
+    tty: true
+    stdin_open: true
+    profiles:
+      - dev
+      - test
+
+  test:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: anthropic-sdk-test
+    volumes:
+      - .:/app
+      - uv-cache:/root/.cache/uv
+    environment:
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      - PYTHONPATH=/app/src
+    command: bash -c "uv sync --frozen --all-extras && pytest -xvs"
+    profiles:
+      - test
+
+  example-basic:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: anthropic-sdk-example-basic
+    volumes:
+      - .:/app
+      - uv-cache:/root/.cache/uv
+    environment:
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      - PYTHONPATH=/app/src
+    command: python examples/BasicUsage.py
+    profiles:
+      - example
+
+  example-advanced:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: anthropic-sdk-example-advanced
+    volumes:
+      - .:/app
+      - uv-cache:/root/.cache/uv
+    environment:
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      - PYTHONPATH=/app/src
+    command: python examples/AdvancedUsage.py
+    profiles:
+      - example
+
+  example-integration:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: anthropic-sdk-example-integration
+    volumes:
+      - .:/app
+      - uv-cache:/root/.cache/uv
+    environment:
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      - PYTHONPATH=/app/src
+    command: python examples/IntegrationExample.py
+    profiles:
+      - example
+
+  # Production build service
+  build-prod:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    container_name: anthropic-sdk-prod-build
+    volumes:
+      - ./dist:/app/dist
+    profiles:
+      - build
+
+volumes:
+  uv-cache:
