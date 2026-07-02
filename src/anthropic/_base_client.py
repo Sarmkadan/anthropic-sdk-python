@@ -43,6 +43,7 @@ from httpx import URL, Proxy, HTTPTransport, AsyncHTTPTransport
 from pydantic import PrivateAttr
 
 from . import _exceptions
+from .exceptions import ConfigurationException, ValidationException
 from ._qs import Querystring
 from ._files import to_httpx_files, async_to_httpx_files
 from ._types import (
@@ -219,13 +220,13 @@ class BasePage(GenericModel, Generic[_T]):
 
         if not isinstance(info.json, NotGiven):
             if not is_mapping(info.json):
-                raise TypeError("Pagination is only supported with mappings")
+                raise ValidationException("Pagination is only supported with mappings")
 
             if not options.json_data:
                 options.json_data = {**info.json}
             else:
                 if not is_mapping(options.json_data):
-                    raise TypeError("Pagination is only supported with mappings")
+                    raise ValidationException("Pagination is only supported with mappings")
 
                 options.json_data = {**options.json_data, **info.json}
             return options
@@ -1360,7 +1361,7 @@ class SyncAPIClient(BaseClient[httpx.Client, Stream[Any]]):
         if body is not None and content is not None:
             raise TypeError("Passing both `body` and `content` is not supported")
         if files is not None and content is not None:
-            raise TypeError("Passing both `files` and `content` is not supported")
+            raise ValidationException("Passing both `files` and `content` is not supported")
         if isinstance(body, bytes):
             warnings.warn(
                 "Passing raw bytes as `body` is deprecated and will be removed in a future version. "
@@ -1386,7 +1387,7 @@ class SyncAPIClient(BaseClient[httpx.Client, Stream[Any]]):
         if body is not None and content is not None:
             raise TypeError("Passing both `body` and `content` is not supported")
         if files is not None and content is not None:
-            raise TypeError("Passing both `files` and `content` is not supported")
+            raise ValidationException("Passing both `files` and `content` is not supported")
         if isinstance(body, bytes):
             warnings.warn(
                 "Passing raw bytes as `body` is deprecated and will be removed in a future version. "
@@ -1412,7 +1413,7 @@ class SyncAPIClient(BaseClient[httpx.Client, Stream[Any]]):
         if body is not None and content is not None:
             raise TypeError("Passing both `body` and `content` is not supported")
         if files is not None and content is not None:
-            raise TypeError("Passing both `files` and `content` is not supported")
+            raise ValidationException("Passing both `files` and `content` is not supported")
         if isinstance(body, bytes):
             warnings.warn(
                 "Passing raw bytes as `body` is deprecated and will be removed in a future version. "
@@ -1993,7 +1994,7 @@ class AsyncAPIClient(BaseClient[httpx.AsyncClient, AsyncStream[Any]]):
         if body is not None and content is not None:
             raise TypeError("Passing both `body` and `content` is not supported")
         if files is not None and content is not None:
-            raise TypeError("Passing both `files` and `content` is not supported")
+            raise ValidationException("Passing both `files` and `content` is not supported")
         if isinstance(body, bytes):
             warnings.warn(
                 "Passing raw bytes as `body` is deprecated and will be removed in a future version. "
@@ -2019,7 +2020,7 @@ class AsyncAPIClient(BaseClient[httpx.AsyncClient, AsyncStream[Any]]):
         if body is not None and content is not None:
             raise TypeError("Passing both `body` and `content` is not supported")
         if files is not None and content is not None:
-            raise TypeError("Passing both `files` and `content` is not supported")
+            raise ValidationException("Passing both `files` and `content` is not supported")
         if isinstance(body, bytes):
             warnings.warn(
                 "Passing raw bytes as `body` is deprecated and will be removed in a future version. "
@@ -2050,7 +2051,7 @@ class AsyncAPIClient(BaseClient[httpx.AsyncClient, AsyncStream[Any]]):
         if body is not None and content is not None:
             raise TypeError("Passing both `body` and `content` is not supported")
         if files is not None and content is not None:
-            raise TypeError("Passing both `files` and `content` is not supported")
+            raise ValidationException("Passing both `files` and `content` is not supported")
         if isinstance(body, bytes):
             warnings.warn(
                 "Passing raw bytes as `body` is deprecated and will be removed in a future version. "
@@ -2280,3 +2281,4 @@ def _merge_mappings(
     """
     merged = {**obj1, **obj2}
     return {key: value for key, value in merged.items() if not isinstance(value, Omit)}
+tance(value, Omit)}

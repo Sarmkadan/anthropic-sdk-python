@@ -9,6 +9,7 @@ from typing_extensions import Self, override
 import httpx
 
 from . import _constants, _exceptions
+from .exceptions import ConfigurationException
 from ._qs import Querystring
 from ._types import (
     Omit,
@@ -246,7 +247,7 @@ class Anthropic(SyncAPIClient):
         credential_headers: dict[str, str] = {}
         if config is not None:
             if credentials is not None or profile is not None:
-                raise TypeError("Pass at most one of `credentials=`, `config=`, or `profile=`.")
+                raise ConfigurationException("Pass at most one of `credentials=`, `config=`, or `profile=`.")
             in_memory = InMemoryConfig(dict(config))
             credentials = in_memory
             credential_headers = in_memory.extra_headers()
@@ -254,7 +255,7 @@ class Anthropic(SyncAPIClient):
                 base_url = in_memory.resolved_base_url
         elif profile is not None:
             if credentials is not None:
-                raise TypeError("Pass at most one of `credentials=`, `config=`, or `profile=`.")
+                raise ConfigurationException("Pass at most one of `credentials=`, `config=`, or `profile=`.")
             creds_file = CredentialsFile(profile=profile)
             credentials = creds_file
             credential_headers = creds_file.extra_headers()
@@ -463,11 +464,11 @@ class Anthropic(SyncAPIClient):
         # --- credentials support (hand-written, upstream to Stainless) ---
         if config is not None:
             if not isinstance(credentials, NotGiven) or profile is not None:
-                raise TypeError("Pass at most one of `credentials=`, `config=`, or `profile=`.")
+                raise ConfigurationException("Pass at most one of `credentials=`, `config=`, or `profile=`.")
             _extra_kwargs = {"config": config, **_extra_kwargs}
         elif profile is not None:
             if not isinstance(credentials, NotGiven):
-                raise TypeError("Pass at most one of `credentials=`, `config=`, or `profile=`.")
+                raise ConfigurationException("Pass at most one of `credentials=`, `config=`, or `profile=`.")
             _extra_kwargs = {"profile": profile, **_extra_kwargs}
         else:
             resolved_credentials = self.credentials if isinstance(credentials, NotGiven) else credentials
@@ -653,7 +654,7 @@ class AsyncAnthropic(AsyncAPIClient):
         credential_headers: dict[str, str] = {}
         if config is not None:
             if credentials is not None or profile is not None:
-                raise TypeError("Pass at most one of `credentials=`, `config=`, or `profile=`.")
+                raise ConfigurationException("Pass at most one of `credentials=`, `config=`, or `profile=`.")
             in_memory = InMemoryConfig(dict(config))
             credentials = in_memory
             credential_headers = in_memory.extra_headers()
@@ -661,7 +662,7 @@ class AsyncAnthropic(AsyncAPIClient):
                 base_url = in_memory.resolved_base_url
         elif profile is not None:
             if credentials is not None:
-                raise TypeError("Pass at most one of `credentials=`, `config=`, or `profile=`.")
+                raise ConfigurationException("Pass at most one of `credentials=`, `config=`, or `profile=`.")
             creds_file = CredentialsFile(profile=profile)
             credentials = creds_file
             credential_headers = creds_file.extra_headers()
@@ -866,11 +867,11 @@ class AsyncAnthropic(AsyncAPIClient):
         # --- credentials support (hand-written, upstream to Stainless) ---
         if config is not None:
             if not isinstance(credentials, NotGiven) or profile is not None:
-                raise TypeError("Pass at most one of `credentials=`, `config=`, or `profile=`.")
+                raise ConfigurationException("Pass at most one of `credentials=`, `config=`, or `profile=`.")
             _extra_kwargs = {"config": config, **_extra_kwargs}
         elif profile is not None:
             if not isinstance(credentials, NotGiven):
-                raise TypeError("Pass at most one of `credentials=`, `config=`, or `profile=`.")
+                raise ConfigurationException("Pass at most one of `credentials=`, `config=`, or `profile=`.")
             _extra_kwargs = {"profile": profile, **_extra_kwargs}
         else:
             resolved_credentials = self.credentials if isinstance(credentials, NotGiven) else credentials
