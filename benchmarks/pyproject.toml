@@ -1,0 +1,31 @@
+[project]
+name = "anthropic-sdk-python.Benchmarks"
+dynamic = []
+version = "0.1.0"
+description = "Performance benchmarks for the Anthropic SDK for Python"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.pytest.ini_options]
+testpaths = ["benchmarks"]
+addopts = "--benchmark-only -v"
+benchmark-columns = ["name", "min", "max", "mean", "median", "ops", "rounds"]
+benchmark-sort = "name"
+benchmark-warmup = "on"
+benchmark-warmup-iterations = 3
+
+[tool.uv]
+managed = true
+required-version = ">=0.9"
+index = [{ url = "https://pypi.org/simple", default = true }]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-benchmark>=4.0.0",
+    "pytest-asyncio>=0.23.0",
+    "respx>=0.20.0",
+    "memory-profiler>=0.60.0",
+]
