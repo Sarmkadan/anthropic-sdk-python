@@ -455,12 +455,23 @@ class BaseClient(Generic[_HttpxClientT, _DefaultStreamT]):
         # headers are case-insensitive while dictionaries are not.
         headers = httpx.Headers(headers_dict)
 
+        self._add_idempotency_header(headers, options)
+        self._add_retry_timeout_headers(headers, options, retries_taken, custom_headers)
+
+        return headers
+
+    def _add_idempotency_header(self, headers: httpx.Headers, options: FinalRequestOptions) -> None:
         idempotency_header = self._idempotency_header
         if idempotency_header and options.idempotency_key and idempotency_header not in headers:
             headers[idempotency_header] = options.idempotency_key
 
-        # Don't set these headers if they were already set or removed by the caller. We check
-        # `custom_headers`, which can contain `Omit()`, instead of `headers` to account for the removal case.
+    def _add_retry_timeout_headers(
+        self,
+        headers: httpx.Headers,
+        options: FinalRequestOptions,
+        retries_taken: int,
+        custom_headers: Mapping[str, Any],
+    ) -> None:
         lower_custom_headers = [header.lower() for header in custom_headers]
         if "x-stainless-retry-count" not in lower_custom_headers:
             headers["x-stainless-retry-count"] = str(retries_taken)
@@ -470,8 +481,6 @@ class BaseClient(Generic[_HttpxClientT, _DefaultStreamT]):
                 timeout = timeout.read
             if timeout is not None:
                 headers["x-stainless-read-timeout"] = str(timeout)
-
-        return headers
 
     def _prepare_url(self, url: str) -> URL:
         """
@@ -2281,4 +2290,3 @@ def _merge_mappings(
     """
     merged = {**obj1, **obj2}
     return {key: value for key, value in merged.items() if not isinstance(value, Omit)}
-tance(value, Omit)}
