@@ -398,6 +398,16 @@ class BaseClient(Generic[_HttpxClientT, _DefaultStreamT]):
         self._idempotency_header = None
         self._platform: Platform | None = None
 
+        log.debug(
+            "Initializing client",
+            extra={
+                "version": version,
+                "base_url": str(base_url),
+                "max_retries": max_retries,
+                "timeout": timeout,
+            },
+        )
+
         if max_retries is None:  # pyright: ignore[reportUnnecessaryComparison]
             raise TypeError(
                 "max_retries cannot be None. If you want to disable retries, pass `0`; if you want unlimited retries, pass `math.inf` or a very high number; if you want the default behavior, pass `anthropic.DEFAULT_MAX_RETRIES`"
@@ -1052,6 +1062,16 @@ class SyncAPIClient(BaseClient[httpx.Client, Stream[Any]]):
         stream: bool = False,
         stream_cls: type[_StreamT] | None = None,
     ) -> ResponseT | _StreamT:
+        log.debug(
+            "Starting request",
+            extra={
+                "method": options.method,
+                "url": str(options.url),
+                "timeout": options.timeout,
+                "max_retries": options.max_retries,
+            },
+        )
+
         cast_to = self._maybe_override_cast_to(cast_to, options)
 
         # create a copy of the options we were given so that if the
@@ -1159,7 +1179,7 @@ class SyncAPIClient(BaseClient[httpx.Client, Stream[Any]]):
             break
 
         assert response is not None, "could not resolve response (should never happen)"
-        return self._process_response(
+        result = self._process_response(
             cast_to=cast_to,
             options=options,
             response=response,
@@ -1167,6 +1187,15 @@ class SyncAPIClient(BaseClient[httpx.Client, Stream[Any]]):
             stream_cls=stream_cls,
             retries_taken=retries_taken,
         )
+        log.info(
+            "Request completed successfully",
+            extra={
+                "status_code": response.status_code,
+                "url": str(response.url),
+                "retries": retries_taken,
+            },
+        )
+        return result
 
     def _sleep_for_retry(
         self, *, retries_taken: int, max_retries: int, options: FinalRequestOptions, response: httpx.Response | None
